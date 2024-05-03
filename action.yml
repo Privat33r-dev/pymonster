@@ -1,0 +1,36 @@
+name: "Resolve dependencies with Poetry"
+description: "Setup Python, install and cache Poetry and resolves dependencies using it."
+
+inputs:
+  python-version:
+    description: "Version of Python to setup"
+    required: true
+    default: "3.10"
+  poetry-version:
+    description: "Version of Poetry to install"
+    required: false
+    default: "1.8.2"
+
+  
+runs:
+  using: "composite"
+  steps:
+    - name: Load cached Poetry installation
+      id: cached-poetry
+      uses: actions/cache@v4
+      with:
+        path: ~/.local  # the path depends on the OS
+        key: poetry-${{ runner.os }}-${{ inputs.python-version }}-${{ inputs.poetry-version }}
+    - name: Install and configure poetry
+      if: steps.cached-poetry.outputs.cache-hit != 'true'
+      run: |
+        pipx install poetry
+        poetry config virtualenvs.in-project true
+      shell: bash
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'poetry'
+    - name: Setup poetry
+      run: poetry install
+      shell: bash
