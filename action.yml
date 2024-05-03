@@ -29,14 +29,17 @@ runs:
       id: cached-poetry
       uses: actions/cache@v4
       with:
-        path: ${{ steps.pipx-env-setup.outputs.pipx-cache-path }}
+        path: |
+          ${{ steps.pipx-env-setup.outputs.pipx-cache-path }}
         key: poetry-v${{ inputs.poetry-version }}-${{ runner.os }}-Python${{ inputs.python-version }}
 
-    - name: Install and configure Poetry ${{ inputs.poetry-version }}
+    - name: Install Poetry ${{ inputs.poetry-version }}
       if: steps.cached-poetry.outputs.cache-hit != 'true'
-      run: |
-        pipx install poetry==${{ inputs.poetry-version }}
-        poetry config virtualenvs.in-project true
+      run: pipx install poetry==${{ inputs.poetry-version }}
+      shell: bash
+
+    - name: Configure Poetry
+      run: poetry config virtualenvs.in-project true
       shell: bash
 
     - name: Setup Python ${{ inputs.python-version }}
