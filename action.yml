@@ -24,7 +24,7 @@ runs:
     - name: Install and configure poetry
       if: steps.cached-poetry.outputs.cache-hit != 'true'
       run: |
-        pipx install poetry==${{ input.poetry-version }}
+        pipx install poetry==${{ inputs.poetry-version }}
         poetry config virtualenvs.in-project true
       shell: bash
     - uses: actions/setup-python@v5
