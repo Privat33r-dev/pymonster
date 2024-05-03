@@ -30,7 +30,7 @@ runs:
       uses: actions/cache@v4
       with:
         path: ${{ steps.pipx-env-setup.outputs.pipx-cache-path }}
-        key: poetry-${{ runner.os }}-${{ inputs.python-version }}-${{ inputs.poetry-version }}
+        key: poetry-v${{ inputs.poetry-version }}-${{ runner.os }}-Python${{ inputs.python-version }}
 
     - name: Install and configure Poetry ${{ inputs.poetry-version }}
       if: steps.cached-poetry.outputs.cache-hit != 'true'
